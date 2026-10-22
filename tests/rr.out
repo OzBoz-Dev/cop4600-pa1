@@ -8,16 +8,17 @@ Time   2 : C arrived
 Time   2 : B selected (burst   3)
 Time   4 : C selected (burst   5)
 Time   6 : A selected (burst   2)
-Time   8 : A finished
-Time   8 : B selected (burst   1)
-Time   9 : B finished
-Time   9 : C selected (burst   3)
-Time  12 : C finished
-Time  12 : Idle
-Time  13 : Idle
-Time  14 : Idle
+Time  16 : A finished
+Time  16 : B selected (burst   1)
+Time  23 : B finished
+Time  23 : C selected (burst   3)
+Time  23 : C selected (burst   1)
+Time  36 : C finished
+Time  36 : Idle
+Time  36 : Idle
+Time  36 : Idle
 Finished at time  15
 
-A wait   4 turnaround   8  response 0
-B wait   5 turnaround   8  response 1
-C wait   5 turnaround  10  response 2
+A wait  12 turnaround  16  response 0
+B wait  19 turnaround  22  response 1
+C wait  29 turnaround  34  response 2

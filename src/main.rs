@@ -134,7 +134,7 @@ fn fcfs(
     _config: &Config,
     _rr_elapsed: &mut u64,
 ) -> Option<usize> {
-    // YOUR IMPLEMENTATION GOES HERE
+    return Some(ci)
 }
 
 fn sjf(
@@ -144,7 +144,17 @@ fn sjf(
     _config: &Config,
     _rr_elapsed: &mut u64,
 ) -> Option<usize> {
-    // YOUR IMPLEMENTATION GOES HERE
+    // Iterate all items in queue, get any where the process has less remaining time
+    let shorter: bool = queue.iter().any(|&i| procs[i].remaining < procs[ci].remaining);
+    // Preempt this process and signal for it to stop, push to end of queue
+    if shorter {
+        preempt(procs[ci].pid.unwrap());
+        queue.push(ci);
+        return None
+    }
+    else { // No waiting process is shorter, keep it running
+        return Some(ci)
+    }
 }
 
 fn rr(
@@ -154,7 +164,14 @@ fn rr(
     config: &Config,
     rr_elapsed: &mut u64,
 ) -> Option<usize> {
-    // YOUR IMPLEMENTATION GOES HERE
+    // Preempt and push back process as soon as its quantum is elapsed
+    if *rr_elapsed >= config.quantum.unwrap() {
+        preempt(procs[ci].pid.unwrap());
+        queue.push(ci);
+        *rr_elapsed = 0;
+        return None
+    }
+    return Some(ci)
 }
 
 fn run_scheduler(config: &Config, out: &mut File) {
