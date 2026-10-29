@@ -26,10 +26,17 @@ use std::time::Instant;
 pub fn spawn_paused(workload_path: &str, ticks: u64) -> Pid {
     match unsafe { fork() }.expect("fork failed") {
         ForkResult::Parent { child } => {
-            kill(child, Signal::SIGSTOP).expect("failed to stop child");
-            child
-        }
+    match waitpid(child, Some(WaitPidFlag::WUNTRACED))
+        .expect("failed to wait for child to stop")
+    {
+        WaitStatus::Stopped(_, Signal::SIGSTOP) => {}
+        status => panic!("unexpected child status: {:?}", status),
+    }
+
+    child
+}
         ForkResult::Child => {
+            kill(Pid::this(), Signal::SIGSTOP).expect("child failed to stop itself");
             let prog = CString::new(workload_path).unwrap();
             let arg0 = prog.clone();
             let arg1 = CString::new(ticks.to_string()).unwrap();
