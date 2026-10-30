@@ -322,6 +322,7 @@ fn run_scheduler(config: &Config, out: &mut File) {
         if !p.finished {
             if let Some(pid) = p.pid {
                 terminate(pid);
+                reap_blocking(pid);
             }
         }
     }
