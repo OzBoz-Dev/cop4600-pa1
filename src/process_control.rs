@@ -78,6 +78,7 @@ pub fn terminate(pid: Pid) {
 /// Blocking reap -- waits for the given child to actually exit. Used
 /// during cleanup, and to confirm a selected process's completion before
 /// you log it as finished.
+// // Retry waitpid if interrupted by a signal) to make sure the child is reaped.
 pub fn reap_blocking(pid: Pid) {
     loop {
         match waitpid(pid, None) {
