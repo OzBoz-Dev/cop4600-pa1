@@ -3,7 +3,7 @@ Ozair Ahmed and Syed Iqbal
 
 AI Disclosure:
 
-Models used: Github Copilot, Devin (Fusion mode: Claude Opus 5.5 and Devin SWE-2)
+Models used: Github Copilot, Devin (Fusion mode: Claude Opus 5.5 and Devin SWE-2), and GPT-6.2-Sol
 
 Prompts:
 
@@ -38,3 +38,23 @@ One thing to watch out for with these kinds of agents is ensuring that you under
 Thus, I also instructed the agent to explain the code, function by function, as well as its testing methodology. It explained the main data structures: KeyEntry, Partition, Job, ThreadArgs, active_job and active_lock. Also explained helper functions, and the steps of the mapping phase, and the reducing phase.
 
 Finally, it explained the testing methodology, the command used to compile `gcc -Wall -Werror -pthread -O -c mapreduce.c`, the temporary test program, and the input files, including edge cases such as an empty file and a file with 100,000 lines. It also showed how it used valgrind to check for memory leaks, and helgrind to check for race conditions, with both coming back clean. Thus, I was finally confident enough in my understanding of the code.
+
+### GPT-6.2-Sol — 11/20/2026 — Syed Iqbal
+
+Prompts summarized for clarity
+
+```
+> Review mapreduce.c against the assignment requirements
+
+> Explain why the number of mapper threads matters when there are fewer input files
+
+> Update MR_Run() to use the requested number of mapper threads
+
+> Prepare a word-count test and explain how to run it under Valgrind
+```
+
+After Ozair added the initial implementation, I used the assistant to review `mapreduce.c` against the assignment. The assistant pointed out that `MR_Run()` capped the mapper count at the number of input files. The original code still processed each file once. The assignment calls for creating the number of mapper threads requested by the caller.
+
+I asked the assistant to edit `MR_Run()`. It removed the cap and the check that skipped starting mappers when there were no input files. The existing round-robin loop checks whether a thread has a file to process. With 10 requested mappers and three files, three threads each get one file and the other seven exit immediately.
+
+I installed GCC and Valgrind in WSL and compiled the revised `mapreduce.c` with `gcc -Wall -Werror -pthread -O -c mapreduce.c`. I created three input files with repeated words across files to check whether values emitted by different mapper threads were grouped under the same key. I ran a temporary word-count program that the assistant wrote. The test requested 10 mapper threads and returned the expected counts of `apple 2`, `banana 2`, and `cherry 1`. Valgrind Memcheck reported zero errors and no memory leaks for that run.
