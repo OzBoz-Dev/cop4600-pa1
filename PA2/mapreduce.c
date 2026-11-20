@@ -310,7 +310,7 @@ void MR_Run(int argc, char *argv[],
             Partitioner partition)
 {
     Job job;
-    int i, num_files;
+    int i;
 
     if (argv == NULL || map == NULL || reduce == NULL)
         return;
@@ -322,10 +322,6 @@ void MR_Run(int argc, char *argv[],
         num_reducers = 1;
     if (partition == NULL)
         partition = MR_DefaultHashPartition;
-
-    num_files = argc - 1;
-    if (num_mappers > num_files && num_files > 0)
-        num_mappers = num_files;
 
     job.argc = argc;
     job.argv = argv;
@@ -344,8 +340,7 @@ void MR_Run(int argc, char *argv[],
     active_job = &job;
     pthread_mutex_unlock(&active_lock);
 
-    if (num_files > 0)
-        run_threads(&job, num_mappers, mapper_thread);
+    run_threads(&job, num_mappers, mapper_thread);
 
     for (i = 0; i < num_reducers; i++) {
         Partition *p = &job.partitions[i];
