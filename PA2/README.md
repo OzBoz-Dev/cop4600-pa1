@@ -1,5 +1,5 @@
 # PA 2
-Ozair Ahmed and Ashar Iqbal
+Ozair Ahmed and Syed Iqbal
 
 AI Disclosure:
 
