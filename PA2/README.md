@@ -3,6 +3,8 @@ Ozair Ahmed and Syed Iqbal
 
 AI Disclosure:
 
+### Ozair Ahmed
+
 Models used: Github Copilot, Devin (Fusion mode: Claude Opus 5.5 and Devin SWE-2), and GPT-6.2-Sol
 
 Prompts:
